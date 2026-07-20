@@ -1,84 +1,43 @@
+// Create Poll
+const createPollForm = document.getElementById("createPollForm");
 
-// Register Form
-const registerForm = document.getElementById("registerForm");
-
-if (registerForm) {
-    registerForm.addEventListener("submit", async function (e) {
+if (createPollForm) {
+    createPollForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const name = document.getElementById("name").value.trim();
-        const email = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value;
-        const confirmPassword = document.getElementById("confirmPassword").value;
+        const question = document.getElementById("question").value;
+        const option1 = document.getElementById("option1").value;
+        const option2 = document.getElementById("option2").value;
+        const option3 = document.getElementById("option3").value;
+        const option4 = document.getElementById("option4").value;
 
-        if (password !== confirmPassword) {
-            alert("Passwords do not match!");
-            return;
-        }
+        const options = [option1, option2];
+
+        if (option3) options.push(option3);
+        if (option4) options.push(option4);
 
         try {
-            const response = await fetch("https://pollsphere-qpj3.onrender.com/api/auth/register", {
+            const response = await fetch("https://pollsphere-qpj3.onrender.com/api/polls", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    name,
-                    email,
-                    password
+                    question,
+                    options
                 })
             });
 
             const data = await response.json();
 
             if (response.ok) {
-                alert("Registration Successful!");
-                window.location.href = "login.html";
+                alert("Poll Created Successfully!");
             } else {
                 alert(data.message);
             }
-
         } catch (error) {
             console.error(error);
-            alert("Cannot connect to backend");
-        }
-    });
-}
-
-
-// Create Group
-const createGroupForm = document.getElementById("createGroupForm");
-
-if (createGroupForm) {
-    createGroupForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        const groupName = document.getElementById("groupName").value;
-        const groupDescription = document.getElementById("groupDescription").value;
-
-        try {
-            const response = await fetch("https://pollsphere-qpj3.onrender.com/api/groups", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    name: groupName,
-                    description: groupDescription
-                })
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                alert("Group Created Successfully!");
-            } else {
-                alert(data.message);
-            }
-
-        } catch (error) {
-            alert("Error creating group");
-            console.error(error);
+            alert("Error creating poll");
         }
     });
 }
